@@ -44,6 +44,12 @@ const AdminLayout = () => {
                         </Nav.Item>
                         <hr />
                         <Nav.Item>
+                            <NavLink className="nav-link" to="/admin/bolge-yayinlari">
+                                Bölge Yayınları Yönet
+                            </NavLink>
+                        </Nav.Item>
+                        <hr />
+                        <Nav.Item>
                             <Button variant="outline-danger" size="sm" className="ms-3" onClick={handleLogout}>Çıkış Yap</Button>
                         </Nav.Item>
                     </div>

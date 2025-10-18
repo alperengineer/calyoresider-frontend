@@ -22,6 +22,7 @@ import ManageHaberlerPage from './pages/admin/ManageHaberlerPage';
 import ManageEtkinliklerPage from './pages/admin/ManageEtkinliklerPage';
 import ManageAyarlarPage from './pages/admin/ManageAyarlarPage';
 import ManageYayinlarPage from './pages/admin/ManageYayinlarPage';
+import ManageBolgeYayinlariPage from './pages/admin/ManageBolgeYayinlariPage';
 
 const PrivateRoute = () => {
   const { token } = useAuth();
@@ -67,6 +68,7 @@ function App() {
             <Route path="etkinlikler" element={<ManageEtkinliklerPage />} />
             <Route path="ayarlar" element={<ManageAyarlarPage />} />
             <Route path="yayinlar" element={<ManageYayinlarPage />} />
+            <Route path="bolge-yayinlari" element={<ManageBolgeYayinlariPage />} />
           </Route>
         </Route>
 

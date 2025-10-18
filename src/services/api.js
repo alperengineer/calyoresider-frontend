@@ -27,7 +27,11 @@ export const getTumEtkinlikler = () => apiClient.get('/etkinlikler');
 export const getEtkinlikDetay = (id) => apiClient.get(`/etkinlikler/${id}`);
 export const getAyarlar = () => apiClient.get('/ayarlar');
 export const postIletisimFormu = (formData) => apiClient.post('/iletisim', formData);
-export const getTumYayinlar = () => apiClient.get('/yayinlar'); // Yeni
+export const getTumYayinlar = () => apiClient.get('/yayinlar');
+export const getTumBolgeYayinlari = () => apiClient.get('/bolge-yayinlari');
+export const createBolgeYayin = (yayin) => apiClient.post('/bolge-yayinlari', yayin);
+export const updateBolgeYayin = (id, yayin) => apiClient.put(`/bolge-yayinlari/${id}`, yayin);
+export const deleteBolgeYayin = (id) => apiClient.delete(`/bolge-yayinlari/${id}`);
 
 // Admin API - Haberler
 export const createHaber = (haber) => apiClient.post('/admin/haberler', haber);
