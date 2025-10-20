@@ -48,9 +48,9 @@ const HomePage = () => {
         color: 'white'
     };
 
-    const handleSatinAlClick = (yayin) => {
-        alert(`"${yayin.baslik}" adlı yayını satın alma işlemi henüz aktif değildir. Yakında hizmetinizde olacaktır.`);
-    };
+    // const handleSatinAlClick = (yayin) => {
+    //     alert(`"${yayin.baslik}" adlı yayını satın alma işlemi henüz aktif değildir. Yakında hizmetinizde olacaktır.`);
+    // };
 
     const YayinKarti = ({ yayin }) => (
         <Card key={yayin.id} className="mb-3">
@@ -69,9 +69,12 @@ const HomePage = () => {
                             <Card.Subtitle className="mb-2 text-muted">{yayin.yazar}</Card.Subtitle>
                             <Card.Text className="mt-3">{yayin.aciklama}</Card.Text>
                         </div>
+                        {/** 
                         <div className="d-flex justify-content-end align-items-center mt-3">
                             <Button variant="success" size="sm" onClick={() => handleSatinAlClick(yayin)}>Satın Al ({yayin.fiyat} TL)</Button>
                         </div>
+
+                        */}
                     </Card.Body>
                 </Col>
             </Row>
