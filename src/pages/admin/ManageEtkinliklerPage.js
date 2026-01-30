@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { getTumEtkinlikler, createEtkinlik, updateEtkinlik, deleteEtkinlik } from '../../services/api';
 import { Button, Table, Modal, Form, Alert } from 'react-bootstrap';
-// Zengin Metin Editörü ve Gerekli CSS
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
 
 const ManageEtkinliklerPage = () => {
     const [etkinlikler, setEtkinlikler] = useState([]);
@@ -75,18 +74,16 @@ const ManageEtkinliklerPage = () => {
         setCurrentEtkinlik({ ...currentEtkinlik, [e.target.name]: e.target.value });
     };
 
-    // Editördeki değişiklikleri yakalayan özel fonksiyon
-    const handleEditorChange = (value) => {
-        setCurrentEtkinlik(prev => ({ ...prev, icerik: value }));
+    const handleEditorChange = (content) => {
+        setCurrentEtkinlik({ ...currentEtkinlik, icerik: content });
     };
 
-    // Editör Araç Çubuğu Seçenekleri (Resim ekleme dahil)
     const modules = {
         toolbar: [
             [{ 'header': [1, 2, false] }],
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
             [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-            ['link', 'image'], // <-- Resim ekleme ikonu
+            ['link', 'image'],
             ['clean']
         ],
     };
@@ -133,7 +130,6 @@ const ManageEtkinliklerPage = () => {
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Label>İçerik (Zengin Metin / Fotoğraf)</Form.Label>
-                            {/* ReactQuill Editörü */}
                             <ReactQuill
                                 theme="snow"
                                 value={currentEtkinlik.icerik}
