@@ -23,6 +23,7 @@ import ManageEtkinliklerPage from './pages/admin/ManageEtkinliklerPage';
 import ManageAyarlarPage from './pages/admin/ManageAyarlarPage';
 import ManageYayinlarPage from './pages/admin/ManageYayinlarPage';
 import ManageBolgeYayinlariPage from './pages/admin/ManageBolgeYayinlariPage';
+import BookReaderPage from './pages/BookReaderPage';
 
 const PrivateRoute = () => {
   const { token } = useAuth();
@@ -48,6 +49,7 @@ function App() {
     <AuthProvider>
       <Routes>
         {/* Public Rotalar */}
+        <Route path="/oku/:folderName" element={<BookReaderPage />} />
         <Route path="/" element={<PublicLayout />}>
           <Route index element={<HomePage />} />
           <Route path="hakkimizda" element={<HakkimizdaPage />} />

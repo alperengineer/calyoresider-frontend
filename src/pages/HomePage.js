@@ -57,7 +57,7 @@ const HomePage = () => {
             <Row className="g-0">
                 <Col md={4}>
                     {yayin.kapakResmiDosyaAdi ?
-                        <Card.Img src={`/uploads/${yayin.kapakResmiDosyaAdi}`} alt={yayin.baslik} style={{ objectFit: 'contain', width: '100%', maxHeight: '300px' }} />
+                        <Card.Img src={`${process.env.REACT_APP_API_URL}/uploads/${yayin.kapakResmiDosyaAdi}`} alt={yayin.baslik} style={{ objectFit: 'contain', width: '100%', maxHeight: '300px' }} />
                         :
                         <div className="bg-light text-secondary d-flex align-items-center justify-content-center" style={{ minHeight: '200px', width: '100%' }}><span>Resim Yok</span></div>
                     }
@@ -69,12 +69,21 @@ const HomePage = () => {
                             <Card.Subtitle className="mb-2 text-muted">{yayin.yazar}</Card.Subtitle>
                             <Card.Text className="mt-3">{yayin.aciklama}</Card.Text>
                         </div>
-                        {/** 
-                        <div className="d-flex justify-content-end align-items-center mt-3">
-                            <Button variant="success" size="sm" onClick={() => handleSatinAlClick(yayin)}>Satın Al ({yayin.fiyat} TL)</Button>
-                        </div>
 
-                        */}
+                        {/* --- KONTROL BURADA --- */}
+                        {/* Veritabanındaki başlık ile buradaki yazı %100 aynı olmalı */}
+                        {yayin.baslik.trim() === 'Çal Yöresi Sempozyumu' ? (
+                            <div className="mt-3 text-end">
+                                <Link
+                                    to="/oku/calyoresi_sempozyum"
+                                    className="btn btn-primary"
+                                >
+                                    <i className="fas fa-book-reader me-2"></i>Kitabı Oku
+                                </Link>
+                            </div>
+                        ) : null}
+                        {/* --- KONTROL BİTTİ --- */}
+
                     </Card.Body>
                 </Col>
             </Row>
