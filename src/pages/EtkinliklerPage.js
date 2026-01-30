@@ -11,6 +11,13 @@ const EtkinliklerPage = () => {
             .catch(error => console.error("Etkinlikler alınamadı:", error));
     }, []);
 
+    // HTML etiketlerini temizleyen yardımcı fonksiyon
+    const stripHtml = (html) => {
+        if (!html) return "";
+        // Önce HTML etiketlerini, sonra &nbsp; gibi özel karakterleri temizler
+        return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+    };
+
     return (
         <div>
             <h1>Etkinlikler</h1>
@@ -21,7 +28,10 @@ const EtkinliklerPage = () => {
                         <h5 className="card-title">{etkinlik.baslik}</h5>
                         <p className="card-text text-muted">Tarih: {new Date(etkinlik.etkinlikTarihi).toLocaleString('tr-TR')}</p>
                         {etkinlik.konum && <p className="card-text text-muted">Konum: {etkinlik.konum}</p>}
-                        <p className="card-text">{etkinlik.icerik.substring(0, 250)}...</p>
+                        <p className="card-text">
+                            {stripHtml(etkinlik.icerik).substring(0, 250)}...
+                        </p>
+
                         <Link to={`/etkinlikler/${etkinlik.id}`} className="btn btn-primary">Detayları Gör</Link>
                     </div>
                 </div>
