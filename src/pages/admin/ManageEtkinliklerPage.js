@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { getTumEtkinlikler, createEtkinlik, updateEtkinlik, deleteEtkinlik } from '../../services/api';
 import { Button, Table, Modal, Form, Alert } from 'react-bootstrap';
+// Zengin Metin Editörü ve Gerekli CSS
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 const ManageEtkinliklerPage = () => {
     const [etkinlikler, setEtkinlikler] = useState([]);
@@ -72,6 +75,22 @@ const ManageEtkinliklerPage = () => {
         setCurrentEtkinlik({ ...currentEtkinlik, [e.target.name]: e.target.value });
     };
 
+    // Editördeki değişiklikleri yakalayan özel fonksiyon
+    const handleEditorChange = (value) => {
+        setCurrentEtkinlik(prev => ({ ...prev, icerik: value }));
+    };
+
+    // Editör Araç Çubuğu Seçenekleri (Resim ekleme dahil)
+    const modules = {
+        toolbar: [
+            [{ 'header': [1, 2, false] }],
+            ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+            ['link', 'image'], // <-- Resim ekleme ikonu
+            ['clean']
+        ],
+    };
+
     return (
         <div>
             <h2>Etkinlik Yönetimi</h2>
@@ -113,8 +132,15 @@ const ManageEtkinliklerPage = () => {
                             <Form.Control type="text" name="baslik" value={currentEtkinlik.baslik} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mt-3">
-                            <Form.Label>İçerik</Form.Label>
-                            <Form.Control as="textarea" rows={5} name="icerik" value={currentEtkinlik.icerik} onChange={handleChange} />
+                            <Form.Label>İçerik (Zengin Metin / Fotoğraf)</Form.Label>
+                            {/* ReactQuill Editörü */}
+                            <ReactQuill
+                                theme="snow"
+                                value={currentEtkinlik.icerik}
+                                onChange={handleEditorChange}
+                                modules={modules}
+                                style={{ height: '300px', marginBottom: '50px' }}
+                            />
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Label>Konum</Form.Label>

@@ -21,9 +21,10 @@ const EtkinlikDetayPage = () => {
                 <p className="text-muted">Tarih: {new Date(etkinlik.etkinlikTarihi).toLocaleString('tr-TR')}</p>
                 {etkinlik.konum && <p className="text-muted">Konum: {etkinlik.konum}</p>}
                 <hr />
-                <div className="etkinlik-icerik" style={{ whiteSpace: 'pre-wrap' }}>
-                    {etkinlik.icerik}
-                </div>
+                <div
+                    className="etkinlik-icerik"
+                    dangerouslySetInnerHTML={{ __html: etkinlik.icerik }}
+                />
                 <hr />
                 <Link to="/etkinlikler" className="btn btn-secondary">&laquo; Tüm Etkinliklere Geri Dön</Link>
             </div>
