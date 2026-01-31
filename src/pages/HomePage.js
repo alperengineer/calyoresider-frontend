@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getSonHaberler, getYaklasanEtkinlikler, getAyarlar, getTumYayinlar, getTumBolgeYayinlari } from '../services/api';
-import { Card, Button, Row, Col } from 'react-bootstrap';
+import { Card, Button, Row, Col, Modal } from 'react-bootstrap';
 
 const HomePage = () => {
     const [haberler, setHaberler] = useState([]);
@@ -10,6 +10,7 @@ const HomePage = () => {
     const [yayinlar, setYayinlar] = useState([]);
     const [bolgeYayinlari, setBolgeYayinlari] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showDuyuru, setShowDuyuru] = useState(false);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -26,7 +27,13 @@ const HomePage = () => {
                 setEtkinlikler(etkinliklerRes.data);
                 setAyarlar(ayarlarRes.data);
                 setYayinlar(yayinlarRes.data);
-                setBolgeYayinlari(bolgeYayinlariRes.data)
+                setBolgeYayinlari(bolgeYayinlariRes.data);
+
+                // --- BURS DUYURUSU KONTROLÜ ---
+                // Eğer duyuru aktifse ve bu oturumda henüz gösterilmediyse aç
+                if (ayarlarRes.data.bursDuyuruAktif && !sessionStorage.getItem('duyuruGosterildi')) {
+                    setShowDuyuru(true);
+                }
 
             } catch (error) {
                 console.error("Veri alınırken hata oluştu:", error);
@@ -37,8 +44,20 @@ const HomePage = () => {
         fetchData();
     }, []);
 
+    // HTML etiketlerini temizleyen yardımcı fonksiyon (Haber özetleri için)
+    const stripHtml = (html) => {
+        if (!html) return "";
+        return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+    };
+
+    const handleCloseDuyuru = () => {
+        setShowDuyuru(false);
+        // Kullanıcıyı her sayfa yenilediğinde rahatsız etmemek için oturum bazlı sakla
+        sessionStorage.setItem('duyuruGosterildi', 'true');
+    };
+
     if (loading) {
-        return <div>Yükleniyor...</div>;
+        return <div className="text-center mt-5">Yükleniyor...</div>;
     }
 
     const jumbotronStyle = {
@@ -47,10 +66,6 @@ const HomePage = () => {
         backgroundPosition: 'center',
         color: 'white'
     };
-
-    // const handleSatinAlClick = (yayin) => {
-    //     alert(`"${yayin.baslik}" adlı yayını satın alma işlemi henüz aktif değildir. Yakında hizmetinizde olacaktır.`);
-    // };
 
     const YayinKarti = ({ yayin }) => (
         <Card key={yayin.id} className="mb-3">
@@ -69,21 +84,13 @@ const HomePage = () => {
                             <Card.Subtitle className="mb-2 text-muted">{yayin.yazar}</Card.Subtitle>
                             <Card.Text className="mt-3">{yayin.aciklama}</Card.Text>
                         </div>
-
-                        {/* --- KONTROL BURADA --- */}
-                        {/* Veritabanındaki başlık ile buradaki yazı %100 aynı olmalı */}
                         {yayin.baslik.trim() === 'Çal Yöresi Sempozyumu' ? (
                             <div className="mt-3 text-end">
-                                <Link
-                                    to="/oku/calyoresi_sempozyum"
-                                    className="btn btn-primary"
-                                >
+                                <Link to="/oku/calyoresi_sempozyum" className="btn btn-primary">
                                     <i className="fas fa-book-reader me-2"></i>Kitabı Oku
                                 </Link>
                             </div>
                         ) : null}
-                        {/* --- KONTROL BİTTİ --- */}
-
                     </Card.Body>
                 </Col>
             </Row>
@@ -92,6 +99,30 @@ const HomePage = () => {
 
     return (
         <div>
+            <Modal show={showDuyuru} onHide={handleCloseDuyuru} centered size="lg">
+                <Modal.Header closeButton>
+                    <Modal.Title>{ayarlar.bursDuyuruBaslik || 'Duyuru'}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body className="text-center">
+                    {ayarlar.bursDuyuruResim && (
+                        <img
+                            src={`${process.env.REACT_APP_API_URL}/uploads/${ayarlar.bursDuyuruResim}`}
+                            alt="Duyuru Görseli"
+                            className="img-fluid mb-3 rounded shadow-sm"
+                            style={{ maxHeight: '450px' }}
+                        />
+                    )}
+                    <div className="p-3">
+                        <h4 className="fw-bold text-primary">{ayarlar.bursDuyuruMetin}</h4>
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseDuyuru}>Kapat</Button>
+                    <Link to="/iletisim" className="btn btn-primary" onClick={handleCloseDuyuru}>Başvuru Bilgisi Al</Link>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Jumbotron */}
             <div className="p-5 mb-4 bg-light rounded-3" style={jumbotronStyle}>
                 <div className="container-fluid py-5">
                     <h1 className="display-5 fw-bold">{ayarlar.jumbotronBaslik}</h1>
@@ -107,7 +138,8 @@ const HomePage = () => {
                         <Card className="mb-3" key={haber.id}>
                             <Card.Body>
                                 <Card.Title>{haber.baslik}</Card.Title>
-                                <Card.Text>{haber.icerik.substring(0, 150)}...</Card.Text>
+                                {/* Haber içeriğindeki HTML etiketlerini temizleyip gösteriyoruz */}
+                                <Card.Text>{stripHtml(haber.icerik).substring(0, 150)}...</Card.Text>
                                 <Button as={Link} to={`/haberler/${haber.id}`} variant="outline-primary" size="sm">Devamını Oku</Button>
                             </Card.Body>
                         </Card>
@@ -119,8 +151,10 @@ const HomePage = () => {
                         <Card className="mb-3" key={etkinlik.id}>
                             <Card.Body>
                                 <Card.Title>{etkinlik.baslik}</Card.Title>
-                                <Card.Text className="text-muted">Tarih: {new Date(etkinlik.etkinlikTarihi).toLocaleString('tr-TR')}</Card.Text>
-                                {etkinlik.konum && <p className="text-muted">Konum: {etkinlik.konum}</p>}
+                                <Card.Text className="text-muted small">
+                                    Tarih: {new Date(etkinlik.etkinlikTarihi).toLocaleString('tr-TR')}
+                                </Card.Text>
+                                {etkinlik.konum && <p className="text-muted small mb-2">Konum: {etkinlik.konum}</p>}
                                 <Button as={Link} to={`/etkinlikler/${etkinlik.id}`} variant="outline-primary" size="sm">Detayları Gör</Button>
                             </Card.Body>
                         </Card>

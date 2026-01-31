@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getAyarlar, updateAyarlar } from '../../services/api';
+import { getAyarlar, updateAyarlar, uploadFile } from '../../services/api';
 import { Button, Form, Alert, Card, Row, Col } from 'react-bootstrap';
 
 const ManageAyarlarPage = () => {
@@ -111,6 +111,53 @@ const ManageAyarlarPage = () => {
                             <Col sm={9}>
                                 <Form.Control type="email" name="email" value={ayarlar.email || ''} onChange={handleChange} />
                             </Col>
+                        </Form.Group>
+                    </Card.Body>
+                </Card>
+
+                <Card className="mb-3 border-primary">
+                    <Card.Header className="bg-primary text-white">Burs Duyurusu (Pop-up) Ayarları</Card.Header>
+                    <Card.Body>
+                        <Form.Check
+                            type="switch"
+                            label="Duyuru Yayında mı?"
+                            name="bursDuyuruAktif"
+                            checked={ayarlar.bursDuyuruAktif || false}
+                            onChange={(e) => setAyarlar({ ...ayarlar, bursDuyuruAktif: e.target.checked })}
+                            className="mb-3"
+                        />
+                        <Form.Group className="mb-3">
+                            <Form.Label>Duyuru Başlığı</Form.Label>
+                            <Form.Control
+                                type="text"
+                                name="bursDuyuruBaslik"
+                                value={ayarlar.bursDuyuruBaslik || ''}
+                                onChange={handleChange}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Duyuru Metni</Form.Label>
+                            <Form.Control
+                                as="textarea"
+                                rows={2}
+                                name="bursDuyuruMetin"
+                                value={ayarlar.bursDuyuruMetin || ''}
+                                onChange={handleChange}
+                            />
+                        </Form.Group>
+                        <Form.Group className="mb-3">
+                            <Form.Label>Duyuru Görseli</Form.Label>
+                            <Form.Control
+                                type="file"
+                                onChange={async (e) => {
+                                    const file = e.target.files[0];
+                                    if (file) {
+                                        const res = await uploadFile(file);
+                                        setAyarlar({ ...ayarlar, bursDuyuruResim: res.data.filename });
+                                    }
+                                }}
+                            />
+                            {ayarlar.bursDuyuruResim && <small>Mevcut Görsel: {ayarlar.bursDuyuruResim}</small>}
                         </Form.Group>
                     </Card.Body>
                 </Card>
