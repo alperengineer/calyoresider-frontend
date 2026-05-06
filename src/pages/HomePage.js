@@ -84,13 +84,16 @@ const HomePage = () => {
                             <Card.Subtitle className="mb-2 text-muted">{yayin.yazar}</Card.Subtitle>
                             <Card.Text className="mt-3">{yayin.aciklama}</Card.Text>
                         </div>
-                        {yayin.baslik.trim() === 'Çal Yöresi Sempozyumu' ? (
-                            <div className="mt-3 text-end">
-                                <Link to="/oku/calyoresi_sempozyum" className="btn btn-primary">
-                                    <i className="fas fa-book-reader me-2"></i>Kitabı Oku
-                                </Link>
-                            </div>
-                        ) : null}
+                        {yayin.okunabilirMi && yayin.okumaKlasoru ? (
+    <div className="mt-3 text-end">
+        <Link
+            to={`/oku/${yayin.okumaKlasoru}`}
+            className="btn btn-primary"
+        >
+            <i className="fas fa-book-reader me-2"></i>Kitabı Oku
+        </Link>
+    </div>
+) : null}
                     </Card.Body>
                 </Col>
             </Row>

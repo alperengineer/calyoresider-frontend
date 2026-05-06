@@ -126,6 +126,26 @@ const ManageBolgeYayinlariPage = () => {
                         <Form.Group className="mt-3"><Form.Label>Açıklama</Form.Label><Form.Control as="textarea" rows={3} name="aciklama" value={currentYayin.aciklama} onChange={handleChange} /></Form.Group>
                         <Form.Group className="mt-3"><Form.Label>Fiyat (TL)</Form.Label><Form.Control type="number" name="fiyat" value={currentYayin.fiyat} onChange={handleChange} /></Form.Group>
                         <Form.Group className="mt-3"><Form.Label>Kapak Fotoğrafı</Form.Label><Form.Control type="file" onChange={handleFileChange} />{currentYayin.kapakResmiDosyaAdi && !selectedFile && <small className="d-block mt-1">Mevcut resim: {currentYayin.kapakResmiDosyaAdi}</small>}</Form.Group>
+                        <Form.Group className="mb-3">
+    <Form.Check 
+        type="switch"
+        label="Sitede Okunabilir mi? (E-Kitap Butonu)"
+        checked={currentYayin.okunabilirMi || false}
+        onChange={(e) => setCurrentYayin({ ...currentYayin, okunabilirMi: e.target.checked })}
+    />
+</Form.Group>
+
+{currentYayin.okunabilirMi && (
+    <Form.Group className="mb-3">
+        <Form.Label>Okuma Klasörü Adı (cPanel'deki klasör ismi)</Form.Label>
+        <Form.Control 
+            type="text" 
+            placeholder="örn: cal_sempozyum_2025"
+            value={currentYayin.okumaKlasoru || ''}
+            onChange={(e) => setCurrentYayin({ ...currentYayin, okumaKlasoru: e.target.value })}
+        />
+    </Form.Group>
+)}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
