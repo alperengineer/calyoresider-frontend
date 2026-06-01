@@ -14,8 +14,8 @@ const EtkinliklerPage = () => {
     // HTML etiketlerini temizleyen yardımcı fonksiyon
     const stripHtml = (html) => {
         if (!html) return "";
-        // Önce HTML etiketlerini, sonra &nbsp; gibi özel karakterleri temizler
-        return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        return doc.body.textContent || "";
     };
 
     return (

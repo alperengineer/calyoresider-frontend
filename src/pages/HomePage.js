@@ -47,7 +47,8 @@ const HomePage = () => {
     // HTML etiketlerini temizleyen yardımcı fonksiyon (Haber özetleri için)
     const stripHtml = (html) => {
         if (!html) return "";
-        return html.replace(/<[^>]*>/g, '').replace(/&nbsp;/g, ' ');
+        const doc = new DOMParser().parseFromString(html, 'text/html');
+        return doc.body.textContent || "";
     };
 
     const handleCloseDuyuru = () => {
@@ -85,15 +86,15 @@ const HomePage = () => {
                             <Card.Text className="mt-3">{yayin.aciklama}</Card.Text>
                         </div>
                         {yayin.okunabilirMi && yayin.okumaKlasoru ? (
-    <div className="mt-3 text-end">
-        <Link
-            to={`/oku/${yayin.okumaKlasoru}`}
-            className="btn btn-primary"
-        >
-            <i className="fas fa-book-reader me-2"></i>Kitabı Oku
-        </Link>
-    </div>
-) : null}
+                            <div className="mt-3 text-end">
+                                <Link
+                                    to={`/oku/${yayin.okumaKlasoru}`}
+                                    className="btn btn-primary"
+                                >
+                                    <i className="fas fa-book-reader me-2"></i>Kitabı Oku
+                                </Link>
+                            </div>
+                        ) : null}
                     </Card.Body>
                 </Col>
             </Row>

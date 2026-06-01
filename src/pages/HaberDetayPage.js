@@ -20,9 +20,11 @@ const HaberDetayPage = () => {
                 <h1>{haber.baslik}</h1>
                 <p className="text-muted">Yayınlanma Tarihi: {new Date(haber.yayinTarihi).toLocaleString('tr-TR')}</p>
                 <hr />
-                <div className="haber-icerik" style={{ whiteSpace: 'pre-wrap' }}>
-                    {haber.icerik}
-                </div>
+                <div
+                    className="haber-icerik"
+                    style={{ overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%' }}
+                    dangerouslySetInnerHTML={{ __html: haber.icerik }}
+                />
                 <hr />
                 <Link to="/haberler" className="btn btn-secondary">&laquo; Tüm Haberlere Geri Dön</Link>
             </div>

@@ -23,6 +23,7 @@ const EtkinlikDetayPage = () => {
                 <hr />
                 <div
                     className="etkinlik-icerik"
+                    style={{ overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%' }}
                     dangerouslySetInnerHTML={{ __html: etkinlik.icerik }}
                 />
                 <hr />
