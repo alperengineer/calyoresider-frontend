@@ -1,0 +1,108 @@
+/* --- src/pages/HomePage.css --- */
+
+/* Karşılama Ekranı (Hero Section) */
+.hero-section {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.7), rgba(30, 58, 138, 0.8)), url('/public/arkaplan.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    color: white;
+    padding: 6rem 2rem;
+    border-radius: 1rem;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 3rem;
+    text-align: center;
+}
+
+.hero-section h1 {
+    color: white;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1.5rem;
+}
+
+.hero-section p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    opacity: 0.9;
+    max-width: 800px;
+    margin: 0 auto 2rem auto;
+}
+
+/* Bölüm Başlıkları (Altı çizgili şık başlıklar) */
+.section-title {
+    position: relative;
+    padding-bottom: 10px;
+    margin-bottom: 2rem;
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 60px;
+    height: 4px;
+    background-color: var(--secondary-color);
+    border-radius: 2px;
+}
+
+.section-title.text-center::after {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Şık ve Yumuşak Kartlar (Taşma sorunu çözüldü) */
+.custom-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    transition: all 0.3s ease;
+    background-color: white;
+    overflow: hidden;
+    /* height: 100% KULLANMIYORUZ ki aşağı doğru gereksiz uzamasın */
+}
+
+.custom-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px -5px rgba(30, 58, 138, 0.15);
+}
+
+.custom-card .card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.custom-card .card-text {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* Yayınlar Kartı Resim Alanı */
+.yayin-img-container {
+    background-color: #f1f5f9;
+    padding: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Haberler Sütunu Kaydırma Çubuğu (Taşmayı kesin engeller) */
+.haberler-sutunu {
+    max-height: 600px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+.haberler-sutunu::-webkit-scrollbar {
+    width: 6px;
+}
+
+.haberler-sutunu::-webkit-scrollbar-thumb {
+    background-color: rgba(30, 58, 138, 0.2);
+    border-radius: 10px;
+}

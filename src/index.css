@@ -1,21 +1,67 @@
+/* --- src/index.css --- */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  /* Kurumsal Renk Paleti */
+  --primary-color: #1e3a8a;
+  /* Dernek Laciverti */
+  --secondary-color: #3b82f6;
+  /* Açık Mavi (Vurgu) */
+  --bg-light: #f8fafc;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --footer-bg: #0f172a;
+}
+
 body,
 html,
 #root {
   height: 100%;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  /* Inter fontunu tüm siteye uyguluyoruz */
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-light);
+  color: var(--text-dark);
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Genel Tipografi ve Başlıklar */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 600;
+  color: var(--primary-color);
 }
 
-.etkinlik-icerik img {
+a {
+  text-decoration: none;
+  color: var(--secondary-color);
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+/* Sayfa İçerik Konteyneri (İçerikleri Ortalar ve Daraltır) */
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+/* Etkinlik ve Haber Detaylarındaki Resimler */
+.etkinlik-icerik img,
+.haber-icerik img {
   max-width: 100%;
   height: auto;
+  border-radius: 8px;
+  /* Resim köşelerini yumuşat */
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
 }

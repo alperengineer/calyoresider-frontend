@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getSonHaberler, getYaklasanEtkinlikler, getAyarlar, getTumYayinlar, getTumBolgeYayinlari } from '../services/api';
 import { Card, Button, Row, Col, Modal } from 'react-bootstrap';
+import './HomePage.css'; // Yeni CSS'imizi bağladık
 
 const HomePage = () => {
     const [haberler, setHaberler] = useState([]);
@@ -29,12 +30,9 @@ const HomePage = () => {
                 setYayinlar(yayinlarRes.data);
                 setBolgeYayinlari(bolgeYayinlariRes.data);
 
-                // --- BURS DUYURUSU KONTROLÜ ---
-                // Eğer duyuru aktifse ve bu oturumda henüz gösterilmediyse aç
                 if (ayarlarRes.data.bursDuyuruAktif && !sessionStorage.getItem('duyuruGosterildi')) {
                     setShowDuyuru(true);
                 }
-
             } catch (error) {
                 console.error("Veri alınırken hata oluştu:", error);
             } finally {
@@ -44,7 +42,6 @@ const HomePage = () => {
         fetchData();
     }, []);
 
-    // HTML etiketlerini temizleyen yardımcı fonksiyon (Haber özetleri için)
     const stripHtml = (html) => {
         if (!html) return "";
         const doc = new DOMParser().parseFromString(html, 'text/html');
@@ -53,44 +50,43 @@ const HomePage = () => {
 
     const handleCloseDuyuru = () => {
         setShowDuyuru(false);
-        // Kullanıcıyı her sayfa yenilediğinde rahatsız etmemek için oturum bazlı sakla
         sessionStorage.setItem('duyuruGosterildi', 'true');
     };
 
     if (loading) {
-        return <div className="text-center mt-5">Yükleniyor...</div>;
+        return (
+            <div className="d-flex justify-content-center align-items-center" style={{ height: '60vh' }}>
+                <div className="spinner-border text-primary" role="status">
+                    <span className="visually-hidden">Yükleniyor...</span>
+                </div>
+            </div>
+        );
     }
 
-    const jumbotronStyle = {
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/arkaplan.jpg')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        color: 'white'
-    };
-
     const YayinKarti = ({ yayin }) => (
-        <Card key={yayin.id} className="mb-3">
-            <Row className="g-0">
-                <Col md={4}>
+        <Card key={yayin.id} className="mb-4 custom-card">
+            <Row className="g-0 h-100">
+                <Col md={3} className="yayin-img-container">
                     {yayin.kapakResmiDosyaAdi ?
-                        <Card.Img src={`${process.env.REACT_APP_API_URL}/uploads/${yayin.kapakResmiDosyaAdi}`} alt={yayin.baslik} style={{ objectFit: 'contain', width: '100%', maxHeight: '300px' }} />
+                        <Card.Img src={`${process.env.REACT_APP_API_URL}/uploads/${yayin.kapakResmiDosyaAdi}`} alt={yayin.baslik} style={{ objectFit: 'contain', width: '100%', maxHeight: '220px' }} />
                         :
-                        <div className="bg-light text-secondary d-flex align-items-center justify-content-center" style={{ minHeight: '200px', width: '100%' }}><span>Resim Yok</span></div>
+                        <div className="text-secondary d-flex align-items-center justify-content-center w-100">
+                            <i className="fas fa-book fa-3x opacity-50"></i>
+                        </div>
                     }
                 </Col>
-                <Col md={8}>
+                <Col md={9}>
                     <Card.Body className="d-flex flex-column h-100 p-4">
                         <div className="flex-grow-1">
                             <Card.Title as="h3">{yayin.baslik}</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">{yayin.yazar}</Card.Subtitle>
-                            <Card.Text className="mt-3">{yayin.aciklama}</Card.Text>
+                            <Card.Subtitle className="mb-3 text-secondary fw-semibold">
+                                <i className="fas fa-user-edit me-2"></i>{yayin.yazar}
+                            </Card.Subtitle>
+                            <Card.Text className="mt-2">{yayin.aciklama}</Card.Text>
                         </div>
                         {yayin.okunabilirMi && yayin.okumaKlasoru ? (
-                            <div className="mt-3 text-end">
-                                <Link
-                                    to={`/oku/${yayin.okumaKlasoru}`}
-                                    className="btn btn-primary"
-                                >
+                            <div className="mt-3 text-md-end">
+                                <Link to={`/oku/${yayin.okumaKlasoru}`} className="btn btn-primary rounded-pill px-4 shadow-sm">
                                     <i className="fas fa-book-reader me-2"></i>Kitabı Oku
                                 </Link>
                             </div>
@@ -102,91 +98,99 @@ const HomePage = () => {
     );
 
     return (
-        <div>
-            <Modal show={showDuyuru} onHide={handleCloseDuyuru} centered size="lg">
-                <Modal.Header closeButton>
-                    <Modal.Title>{ayarlar.bursDuyuruBaslik || 'Duyuru'}</Modal.Title>
+        <div className="page-container">
+            {/* Duyuru Modalı (Daha yuvarlak hatlar ve gölgeler) */}
+            <Modal show={showDuyuru} onHide={handleCloseDuyuru} centered size="lg" contentClassName="border-0 shadow-lg rounded-4">
+                <Modal.Header closeButton className="border-0 pb-0">
+                    <Modal.Title className="fw-bold text-primary">{ayarlar.bursDuyuruBaslik || 'Duyuru'}</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="text-center">
+                <Modal.Body className="text-center px-4">
                     {ayarlar.bursDuyuruResim && (
                         <img
                             src={`${process.env.REACT_APP_API_URL}/uploads/${ayarlar.bursDuyuruResim}`}
                             alt="Duyuru Görseli"
-                            className="img-fluid mb-3 rounded shadow-sm"
-                            style={{ maxHeight: '450px' }}
+                            className="img-fluid mb-4 rounded-3 shadow-sm"
+                            style={{ maxHeight: '400px' }}
                         />
                     )}
-                    <div className="p-3">
-                        <h4 className="fw-bold text-primary">{ayarlar.bursDuyuruMetin}</h4>
-                    </div>
+                    <h4 className="fw-medium text-dark">{ayarlar.bursDuyuruMetin}</h4>
                 </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleCloseDuyuru}>Kapat</Button>
-                    <Link to="/iletisim" className="btn btn-primary" onClick={handleCloseDuyuru}>Başvuru Bilgisi Al</Link>
+                <Modal.Footer className="border-0 pt-0 pb-4 pe-4">
+                    <Button variant="light" onClick={handleCloseDuyuru} className="rounded-pill px-4">Kapat</Button>
+                    <Link to="/iletisim" className="btn btn-primary rounded-pill px-4 shadow-sm" onClick={handleCloseDuyuru}>Başvuru Bilgisi Al</Link>
                 </Modal.Footer>
             </Modal>
 
-            {/* Jumbotron */}
-            <div className="p-5 mb-4 bg-light rounded-3" style={jumbotronStyle}>
-                <div className="container-fluid py-5">
-                    <h1 className="display-5 fw-bold">{ayarlar.jumbotronBaslik}</h1>
-                    <p className="col-md-8 fs-4">{ayarlar.jumbotronMetin}</p>
-                    <Link className="btn btn-primary btn-lg" to="/hakkimizda">Daha Fazla Bilgi</Link>
-                </div>
+            {/* Yeni Şık Hero Section */}
+            <div className="hero-section">
+                <h1>{ayarlar.jumbotronBaslik}</h1>
+                <p>{ayarlar.jumbotronMetin}</p>
+                <Link className="btn btn-light btn-lg rounded-pill px-5 fw-bold text-primary shadow-sm" to="/hakkimizda">
+                    Daha Fazla Bilgi
+                </Link>
             </div>
 
-            <Row>
-                <Col md={8}>
-                    <h2>Son Haberler</h2>
+            <Row className="mb-5">
+                <Col md={8} className="mb-4 mb-md-0 haberler-sutunu">
+                    <h2 className="section-title">Son Haberler</h2>
                     {haberler.length > 0 ? haberler.map(haber => (
-                        <Card className="mb-3" key={haber.id}>
-                            <Card.Body>
-                                <Card.Title>{haber.baslik}</Card.Title>
-                                {/* Haber içeriğindeki HTML etiketlerini temizleyip gösteriyoruz */}
-                                <Card.Text>{stripHtml(haber.icerik).substring(0, 150)}...</Card.Text>
-                                <Button as={Link} to={`/haberler/${haber.id}`} variant="outline-primary" size="sm">Devamını Oku</Button>
+                        <Card className="mb-4 custom-card" key={haber.id}>
+                            <Card.Body className="p-4">
+                                <Card.Title className="mb-3">{haber.baslik}</Card.Title>
+                                <Card.Text>{stripHtml(haber.icerik).substring(0, 180)}...</Card.Text>
+                                <div className="mt-3">
+                                    <Button as={Link} to={`/haberler/${haber.id}`} variant="outline-primary" size="sm" className="rounded-pill px-3 fw-medium">
+                                        Devamını Oku <i className="fas fa-arrow-right ms-1"></i>
+                                    </Button>
+                                </div>
                             </Card.Body>
                         </Card>
-                    )) : <p>Henüz yayınlanmış bir haber bulunmamaktadır.</p>}
+                    )) : <p className="text-muted">Henüz yayınlanmış bir haber bulunmamaktadır.</p>}
                 </Col>
+
                 <Col md={4}>
-                    <h2>Yaklaşan Etkinlikler</h2>
+                    <h2 className="section-title">Yaklaşan Etkinlikler</h2>
                     {etkinlikler.length > 0 ? etkinlikler.map(etkinlik => (
-                        <Card className="mb-3" key={etkinlik.id}>
-                            <Card.Body>
-                                <Card.Title>{etkinlik.baslik}</Card.Title>
-                                <Card.Text className="text-muted small">
-                                    Tarih: {new Date(etkinlik.etkinlikTarihi).toLocaleString('tr-TR')}
-                                </Card.Text>
-                                {etkinlik.konum && <p className="text-muted small mb-2">Konum: {etkinlik.konum}</p>}
-                                <Button as={Link} to={`/etkinlikler/${etkinlik.id}`} variant="outline-primary" size="sm">Detayları Gör</Button>
+                        <Card className="mb-4 custom-card" key={etkinlik.id}>
+                            <Card.Body className="p-4">
+                                <Card.Title className="fs-5">{etkinlik.baslik}</Card.Title>
+                                <hr className="text-muted opacity-25" />
+                                <div className="d-flex align-items-center mb-2 text-muted small">
+                                    <i className="far fa-calendar-alt me-2 text-primary"></i>
+                                    <span>{new Date(etkinlik.etkinlikTarihi).toLocaleString('tr-TR')}</span>
+                                </div>
+                                {etkinlik.konum && (
+                                    <div className="d-flex align-items-center text-muted small mb-3">
+                                        <i className="fas fa-map-marker-alt me-2 text-primary"></i>
+                                        <span>{etkinlik.konum}</span>
+                                    </div>
+                                )}
+                                <Button as={Link} to={`/etkinlikler/${etkinlik.id}`} variant="primary" size="sm" className="w-100 rounded-pill shadow-sm">
+                                    Detayları Gör
+                                </Button>
                             </Card.Body>
                         </Card>
-                    )) : <p>Henüz planlanmış bir etkinlik bulunmamaktadır.</p>}
+                    )) : <p className="text-muted">Henüz planlanmış bir etkinlik bulunmamaktadır.</p>}
                 </Col>
             </Row>
 
-            <hr className="my-5" />
-
-            <div className="yayinlar-bolumu">
-                <h2 className="text-center mb-4">Yayınlarımız</h2>
-                <div className="yayinlar-listesi">
+            <div className="yayinlar-bolumu mb-5 pt-4">
+                <h2 className="section-title text-center">Yayınlarımız</h2>
+                <div className="mt-4">
                     {yayinlar.length > 0 ? yayinlar.map(yayin => (
                         <YayinKarti key={yayin.id} yayin={yayin} />
-                    )) : <p className="text-center">Henüz bir yayın bulunmamaktadır.</p>}
+                    )) : <p className="text-center text-muted">Henüz bir yayın bulunmamaktadır.</p>}
                 </div>
             </div>
 
-            <div className="bolge-yayinlari-bolumu">
-                <h2 className="text-center mb-4">Çal Yöresi Yayınları</h2>
-                <div className="yayinlar-listesi">
+            <div className="bolge-yayinlari-bolumu mb-4 pt-4">
+                <h2 className="section-title text-center">Çal Yöresi Yayınları</h2>
+                <div className="mt-4">
                     {bolgeYayinlari.length > 0 ? bolgeYayinlari.map(yayin => (
                         <YayinKarti key={yayin.id} yayin={yayin} />
-                    )) : <p className="text-center">Henüz bir bölge yayını bulunmamaktadır.</p>}
+                    )) : <p className="text-center text-muted">Henüz bir bölge yayını bulunmamaktadır.</p>}
                 </div>
             </div>
-
-            <hr className="my-5" />
         </div>
     );
 };

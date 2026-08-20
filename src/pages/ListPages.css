@@ -1,0 +1,59 @@
+/* --- src/pages/ListPages.css --- */
+
+/* Kartların Genel Yapısı */
+.news-card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background-color: white;
+    height: 100%;
+    /* Tüm kartların eşit boyda olmasını sağlar */
+    overflow: hidden;
+}
+
+.news-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px -5px rgba(30, 58, 138, 0.15);
+}
+
+.news-card .card-body {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    /* İçeriğin yukarıdan aşağı dizilmesini sağlar */
+}
+
+/* Tarih Etiketi (Badge) */
+.news-date-badge {
+    background-color: #eff6ff;
+    /* Açık mavi arka plan */
+    color: var(--secondary-color);
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-bottom: 1rem;
+    width: fit-content;
+}
+
+.news-card .card-title {
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+}
+
+.news-card .card-text {
+    color: var(--text-muted);
+    flex-grow: 1;
+    /* Butonu her zaman en alta iter */
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.read-more-btn {
+    margin-top: auto;
+    /* Flex-grow ile birlikte butonu en alta sabitler */
+}
