@@ -117,7 +117,7 @@ const HomePage = () => {
                 </Modal.Body>
                 <Modal.Footer className="border-0 pt-0 pb-4 pe-4">
                     <Button variant="light" onClick={handleCloseDuyuru} className="rounded-pill px-4">Kapat</Button>
-                    <Link to="/iletisim" className="btn btn-primary rounded-pill px-4 shadow-sm" onClick={handleCloseDuyuru}>Başvuru Bilgisi Al</Link>
+                    <Link to="/burs-basvuru" className="btn btn-primary rounded-pill px-4 shadow-sm" onClick={handleCloseDuyuru}>Başvuru Bilgisi Al</Link>
                 </Modal.Footer>
             </Modal>
 

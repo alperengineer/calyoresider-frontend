@@ -44,9 +44,9 @@ export const updateEtkinlik = (id, etkinlik) => apiClient.put(`/admin/etkinlikle
 export const deleteEtkinlik = (id) => apiClient.delete(`/admin/etkinlikler/${id}`);
 
 // Admin API - Yayınlar (YENİ)
-export const createYayin = (yayin) => apiClient.post('/admin/yayinlar', yayin);
-export const updateYayin = (id, yayin) => apiClient.put(`/admin/yayinlar/${id}`, yayin);
-export const deleteYayin = (id) => apiClient.delete(`/admin/yayinlar/${id}`);
+export const createYayin = (yayin) => apiClient.post('/yayinlar', yayin);
+export const updateYayin = (id, yayin) => apiClient.put(`/yayinlar/${id}`, yayin);
+export const deleteYayin = (id) => apiClient.delete(`/yayinlar/${id}`);
 
 export const uploadFile = (file) => {
     const formData = new FormData();

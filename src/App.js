@@ -24,6 +24,7 @@ import ManageAyarlarPage from './pages/admin/ManageAyarlarPage';
 import ManageYayinlarPage from './pages/admin/ManageYayinlarPage';
 import ManageBolgeYayinlariPage from './pages/admin/ManageBolgeYayinlariPage';
 import BookReaderPage from './pages/BookReaderPage';
+import BursBasvuruPage from './pages/BursBasvuruPage';
 
 const PrivateRoute = () => {
   const { token } = useAuth();
@@ -58,6 +59,7 @@ function App() {
           <Route path="etkinlikler" element={<EtkinliklerPage />} />
           <Route path="etkinlikler/:id" element={<EtkinlikDetayPage />} />
           <Route path="iletisim" element={<IletisimPage />} />
+          <Route path="burs-basvuru" element={<BursBasvuruPage />} />
         </Route>
 
         {/* Auth ve Admin Rotaları */}

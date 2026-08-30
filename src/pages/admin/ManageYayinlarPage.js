@@ -5,8 +5,7 @@ import { Button, Table, Modal, Form, Alert, Spinner } from 'react-bootstrap';
 const ManageYayinlarPage = () => {
     const [yayinlar, setYayinlar] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    // State'i tüm alanları içerecek şekilde güncelliyoruz
-    const [currentYayin, setCurrentYayin] = useState({ id: null, baslik: '', yazar: '', aciklama: '', urunTipi: 'Kitap', fiyat: 0, kapakResmiDosyaAdi: '' });
+    const [currentYayin, setCurrentYayin] = useState({ id: null, baslik: '', yazar: '', aciklama: '', urunTipi: 'Kitap', fiyat: 0, kapakResmiDosyaAdi: '', okunabilirMi: false, okumaKlasoru: '' });
     const [selectedFile, setSelectedFile] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState('');
@@ -27,11 +26,11 @@ const ManageYayinlarPage = () => {
 
     const handleClose = () => {
         setShowModal(false);
-        setCurrentYayin({ id: null, baslik: '', yazar: '', aciklama: '', urunTipi: 'Kitap', fiyat: 0, kapakResmiDosyaAdi: '' });
+        setCurrentYayin({ id: null, baslik: '', yazar: '', aciklama: '', urunTipi: 'Kitap', fiyat: 0, kapakResmiDosyaAdi: '', okunabilirMi: false, okumaKlasoru: '' });
         setSelectedFile(null);
     };
 
-    const handleShow = (yayin = { id: null, baslik: '', yazar: '', aciklama: '', urunTipi: 'Kitap', fiyat: 0, kapakResmiDosyaAdi: '' }) => {
+    const handleShow = (yayin = { id: null, baslik: '', yazar: '', aciklama: '', urunTipi: 'Kitap', fiyat: 0, kapakResmiDosyaAdi: '', okunabilirMi: false, okumaKlasoru: '' }) => {
         setCurrentYayin(yayin);
         setShowModal(true);
     };
@@ -55,18 +54,16 @@ const ManageYayinlarPage = () => {
     const handleSave = async () => {
         try {
             setError('');
-            let yayinToSave = { ...currentYayin };
+            // Mongoose Update hatasını önlemek için arka plan id'lerini (_id, __v) siliyoruz
+            const { _id, __v, createdAt, updatedAt, ...yayinToSave } = currentYayin;
 
-            // Eğer yeni bir dosya seçildiyse, önce onu yükle
             if (selectedFile) {
                 setIsUploading(true);
                 const response = await uploadFile(selectedFile);
-                // Dönen dosya adını kaydedilecek yayına ekle
                 yayinToSave.kapakResmiDosyaAdi = response.data.filename;
                 setIsUploading(false);
             }
 
-            // Son olarak, tüm veriyi (metin alanları + yeni resim adı) kaydet
             if (yayinToSave.id) {
                 await updateYayin(yayinToSave.id, yayinToSave);
             } else {
@@ -105,7 +102,7 @@ const ManageYayinlarPage = () => {
                         <tr key={yayin.id}>
                             <td>
                                 {yayin.kapakResmiDosyaAdi &&
-                                    <img src={`/uploads/${yayin.kapakResmiDosyaAdi}`} alt={yayin.baslik} style={{ width: '50px', height: 'auto' }} />
+                                    <img src={`${process.env.REACT_APP_API_URL}/uploads/${yayin.kapakResmiDosyaAdi}`} alt={yayin.baslik} style={{ width: '50px', height: 'auto' }} />
                                 }
                             </td>
                             <td>{yayin.baslik}</td>
@@ -126,22 +123,21 @@ const ManageYayinlarPage = () => {
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
-                        {/* TÜM METİN ALANLARI BURADA */}
                         <Form.Group>
                             <Form.Label>Başlık</Form.Label>
-                            <Form.Control type="text" name="baslik" value={currentYayin.baslik} onChange={handleChange} />
+                            <Form.Control type="text" name="baslik" value={currentYayin.baslik || ''} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Label>Yazar</Form.Label>
-                            <Form.Control type="text" name="yazar" value={currentYayin.yazar} onChange={handleChange} />
+                            <Form.Control type="text" name="yazar" value={currentYayin.yazar || ''} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Label>Açıklama</Form.Label>
-                            <Form.Control as="textarea" rows={3} name="aciklama" value={currentYayin.aciklama} onChange={handleChange} />
+                            <Form.Control as="textarea" rows={3} name="aciklama" value={currentYayin.aciklama || ''} onChange={handleChange} />
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Label>Ürün Tipi</Form.Label>
-                            <Form.Select name="urunTipi" value={currentYayin.urunTipi} onChange={handleChange}>
+                            <Form.Select name="urunTipi" value={currentYayin.urunTipi || 'Kitap'} onChange={handleChange}>
                                 <option>Kitap</option>
                                 <option>Dergi</option>
                                 <option>Makale</option>
@@ -149,17 +145,40 @@ const ManageYayinlarPage = () => {
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Label>Fiyat (TL)</Form.Label>
-                            <Form.Control type="number" name="fiyat" value={currentYayin.fiyat} onChange={handleChange} />
+                            <Form.Control type="number" name="fiyat" value={currentYayin.fiyat || 0} onChange={handleChange} />
                         </Form.Group>
 
-                        {/* FOTOĞRAF YÜKLEME ALANI */}
                         <Form.Group className="mt-3">
                             <Form.Label>Kapak Fotoğrafı</Form.Label>
                             <Form.Control type="file" onChange={handleFileChange} />
                             {currentYayin.kapakResmiDosyaAdi && !selectedFile &&
-                                <small className="d-block mt-1">Mevcut resim: {currentYayin.kapakResmiDosyaAdi}</small>
+                                <small className="d-block mt-1 text-muted">Mevcut resim: {currentYayin.kapakResmiDosyaAdi}</small>
                             }
                         </Form.Group>
+
+                        <hr className="my-4" />
+
+                        {/* Eksik Olan Düğmeler Eklendi */}
+                        <Form.Group className="mb-3">
+                            <Form.Check
+                                type="switch"
+                                label="Sitede Okunabilir mi? (E-Kitap Butonu)"
+                                checked={currentYayin.okunabilirMi || false}
+                                onChange={(e) => setCurrentYayin({ ...currentYayin, okunabilirMi: e.target.checked })}
+                            />
+                        </Form.Group>
+
+                        {currentYayin.okunabilirMi && (
+                            <Form.Group className="mb-3">
+                                <Form.Label>Okuma Klasörü Adı (cPanel'deki klasör ismi)</Form.Label>
+                                <Form.Control
+                                    type="text"
+                                    placeholder="örn: cal_sempozyum"
+                                    value={currentYayin.okumaKlasoru || ''}
+                                    onChange={(e) => setCurrentYayin({ ...currentYayin, okumaKlasoru: e.target.value })}
+                                />
+                            </Form.Group>
+                        )}
                     </Form>
                 </Modal.Body>
                 <Modal.Footer>
