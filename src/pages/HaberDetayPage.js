@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getHaberDetay } from '../services/api';
-import { Row, Col, Button, Spinner } from 'react-bootstrap';
-import './DetailPages.css'; // Ortak CSS'imizi bağladık
+import { Row, Col, Spinner } from 'react-bootstrap';
+import './DetailPages.css';
 
 const HaberDetayPage = () => {
     const [haber, setHaber] = useState(null);
@@ -58,9 +58,9 @@ const HaberDetayPage = () => {
                             </span>
                         </div>
 
+                        {/* Zengin Metin Editöründen (React-Quill) gelen HTML içeriğini render eder */}
                         <div
                             className="article-content"
-                            // style={{ overflowWrap: 'break-word', wordWrap: 'break-word', wordBreak: 'break-word', maxWidth: '100%' }}
                             dangerouslySetInnerHTML={{ __html: haber.icerik }}
                         />
                     </div>

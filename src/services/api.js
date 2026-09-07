@@ -58,6 +58,14 @@ export const uploadFile = (file) => {
     });
 };
 
+export const postBursBasvuru = (formData) => {
+    return apiClient.post('/burs-basvurulari', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+};
+
 // Admin API - Ayarlar
 export const updateAyarlar = (ayarlar) => apiClient.put('/admin/ayarlar', ayarlar);
 export const getBookPages = (folderName) => apiClient.get(`/books/${folderName}/pages`);

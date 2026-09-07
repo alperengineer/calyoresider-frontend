@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getTumHaberler, createHaber, updateHaber, deleteHaber } from '../../services/api';
 import { Button, Table, Modal, Form, Alert } from 'react-bootstrap';
 
+// 1. React-Quill ve stil dosyasını import ediyoruz
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css';
+
 const ManageHaberlerPage = () => {
     const [haberler, setHaberler] = useState([]);
     const [showModal, setShowModal] = useState(false);
@@ -59,8 +63,14 @@ const ManageHaberlerPage = () => {
         }
     };
 
+    // Başlık gibi standart inputlar için eski fonksiyon
     const handleChange = (e) => {
         setCurrentHaber({ ...currentHaber, [e.target.name]: e.target.value });
+    };
+
+    // 2. React-Quill için özel değişiklik fonksiyonu (Çünkü e.target kullanmaz, direkt value döndürür)
+    const handleIcerikChange = (value) => {
+        setCurrentHaber({ ...currentHaber, icerik: value });
     };
 
     return (
@@ -70,6 +80,7 @@ const ManageHaberlerPage = () => {
             <Button onClick={() => handleShow()} className="mb-3">Yeni Haber Ekle</Button>
 
             <Table striped bordered hover responsive>
+                {/* ... Tablo kısmı aynı kalıyor ... */}
                 <thead>
                     <tr>
                         <th>Başlık</th>
@@ -101,7 +112,15 @@ const ManageHaberlerPage = () => {
                         </Form.Group>
                         <Form.Group className="mt-3">
                             <Form.Label>İçerik</Form.Label>
-                            <Form.Control as="textarea" rows={10} name="icerik" value={currentHaber.icerik} onChange={handleChange} />
+
+                            {/* 3. Eski textarea yerine React-Quill'i yerleştiriyoruz */}
+                            <ReactQuill
+                                theme="snow"
+                                value={currentHaber.icerik}
+                                onChange={handleIcerikChange}
+                                style={{ height: '250px', marginBottom: '50px' }}
+                            />
+
                         </Form.Group>
                     </Form>
                 </Modal.Body>
