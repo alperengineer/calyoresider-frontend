@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import ilIlceData from '../data/city.json';
 import { postBursBasvuru } from '../services/api';
 
+/*
 const BursBasvuruPage = () => {
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
@@ -112,8 +113,7 @@ const BursBasvuruPage = () => {
 
                         <Form onSubmit={handleSubmit}>
 
-                            {/* --- 1. KİŞİSEL BİLGİLER --- */}
-                            <h4 className="section-title mb-4">1. Kişisel Bilgiler</h4>
+                                                        <h4 className="section-title mb-4">1. Kişisel Bilgiler</h4>
                             <Row className="g-3 mb-5">
                                 <Col md={6}><Form.Group><Form.Label>Ad</Form.Label><Form.Control type="text" name="ad" required onChange={handleChange} /></Form.Group></Col>
                                 <Col md={6}><Form.Group><Form.Label>Soyad</Form.Label><Form.Control type="text" name="soyad" required onChange={handleChange} /></Form.Group></Col>
@@ -129,7 +129,7 @@ const BursBasvuruPage = () => {
                                 <Col md={6}><Form.Group><Form.Label>Baba Adı</Form.Label><Form.Control type="text" name="babaAdi" required onChange={handleChange} /></Form.Group></Col>
                                 <Col md={6}><Form.Group><Form.Label>Ana Adı</Form.Label><Form.Control type="text" name="anaAdi" required onChange={handleChange} /></Form.Group></Col>
 
-                                {/* YENİ EKLENEN İL-İLÇE-KÖY ALANI */}
+                                
                                 <Col md={4}>
                                     <Form.Group>
                                         <Form.Label>Nüfusa Kayıtlı İl</Form.Label>
@@ -160,7 +160,7 @@ const BursBasvuruPage = () => {
                                 </Col>
                             </Row>
 
-                            {/* --- 2. EĞİTİM BİLGİLERİ --- */}
+                           
                             <h4 className="section-title mb-4">2. Eğitim Bilgileri</h4>
                             <Row className="g-3 mb-5">
                                 <Col md={6}><Form.Group><Form.Label>Öğrenim Görülen Okul</Form.Label><Form.Control type="text" name="okulAdi" required onChange={handleChange} /></Form.Group></Col>
@@ -187,7 +187,7 @@ const BursBasvuruPage = () => {
                                 )}
                             </Row>
 
-                            {/* --- 3. AİLE VE SOSYO-EKONOMİK DURUM --- */}
+                            
                             <h4 className="section-title mb-4">3. Aile ve Ekonomik Durum</h4>
                             <Row className="g-3 mb-4">
                                 <Col md={4}><Form.Group><Form.Label>Babanız Hayatta mı?</Form.Label><Form.Select name="babaHayatta" onChange={handleChange}><option>Evet</option><option>Hayır</option></Form.Select></Form.Group></Col>
@@ -203,7 +203,7 @@ const BursBasvuruPage = () => {
                                 <Col md={12}><Form.Group><Form.Label>Bu Dönem Kalacağınız Yer</Form.Label><Form.Control type="text" name="kalinacakYer" placeholder="Örn: KYK Yurdu, Aile Yanı, Öğrenci Evi" required onChange={handleChange} /></Form.Group></Col>
                             </Row>
 
-                            {/* --- 4. REFERANSLAR --- */}
+                           
                             <h4 className="section-title mb-4 mt-5">4. Referanslar</h4>
                             <p className="text-muted small mb-3">Lütfen 3 adet referansınızın İsim, Soyisim ve Cep numaralarını yazınız.</p>
                             <Row className="g-3 mb-5">
@@ -212,7 +212,7 @@ const BursBasvuruPage = () => {
                                 <Col md={4}><Form.Control type="text" name="referans3" placeholder="3. Referans Ad - Tel" required onChange={handleChange} /></Col>
                             </Row>
 
-                            {/* --- 5. EKLER VE BELGELER --- */}
+                           
                             <h4 className="section-title mb-4">5. Ekler</h4>
                             <Row className="g-4 mb-5">
                                 <Col md={6}>
@@ -229,7 +229,7 @@ const BursBasvuruPage = () => {
                                 </Col>
                             </Row>
 
-                            {/* --- 6. ONAY VE GÖNDERİM --- */}
+                           
                             <div className="p-4 rounded-3 mb-4" style={{ backgroundColor: '#f8fafc', border: '1px solid #e2e8f0' }}>
                                 <Form.Group className="mb-3">
                                     <Form.Check
@@ -260,6 +260,34 @@ const BursBasvuruPage = () => {
                             </div>
 
                         </Form>
+                    </Card.Body>
+                </Card>
+            </Container>
+        </div>
+    );
+};
+
+export default BursBasvuruPage;
+
+*/
+
+const BursBasvuruPage = () => {
+    const navigate = useNavigate();
+
+    return (
+        <div className="page-container fade-in">
+            <Container className="d-flex justify-content-center align-items-center" style={{ minHeight: '60vh' }}>
+                <Card className="custom-card shadow-sm border-0 p-5 text-center" style={{ maxWidth: '600px' }}>
+                    <Card.Body>
+                        <i className="fas fa-clock fa-5x text-warning mb-4"></i>
+                        <h2 className="fw-bold mb-3">Başvurular Sona Erdi</h2>
+                        <p className="text-muted fs-5">
+                            Burs başvuru sürecimiz tamamlanmıştır. Göstermiş olduğunuz yoğun ilgi için teşekkür ederiz. 
+                            Değerlendirme süreci sonrasında sonuçlar ve bilgilendirmeler yapılacaktır.
+                        </p>
+                        <Button variant="primary" className="rounded-pill mt-4 px-4" onClick={() => navigate('/')}>
+                            Ana Sayfaya Dön
+                        </Button>
                     </Card.Body>
                 </Card>
             </Container>
